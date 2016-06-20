@@ -176,13 +176,10 @@ solutions.liudmylaPolianychko = function (board) {
 
 solutions.maksymYurchenko = function (board) {
     // YOUR SOLUTION GOES HERE
-    horse();
-    function horse() {
         var n = board.length;
         var way = new Array(n);
     
         for (var i = n; i--;) {
-            board[i] = new Array(n);
             way[i] = new Array(n);
         }
         way[0][0] = [0,0];
@@ -238,7 +235,6 @@ solutions.maksymYurchenko = function (board) {
         coord.reverse();
         return coord;
     }
-};
 
 solutions.olgaRomankiv = function (board) {
     var size = board.length;
