@@ -101,7 +101,6 @@ solutions.yaroslavSamoilenko = function (board) {
         }
     }
     path.reverse();
-    document.getElementById('path').innerHTML += path.length;
 
     return path;
 };
