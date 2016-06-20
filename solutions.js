@@ -105,7 +105,8 @@ solutions.olgaRomankiv = function (board) {
     }
 
     var corner = [{x:0, y:0}, {x:board.length-1, y:0}, {x:0, y:board.length-1}, {x:board.length-1, y:board.length-1}];
-    for (var e in corner){
+    var start, finish;
+	for (var e in corner){
         if (board[corner[e].x][corner[e].y] == 's') {
             start = corner[e];
         }
