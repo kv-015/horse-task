@@ -66,16 +66,7 @@ solutions.lucy = function (board) {
         return arr;
     }
 
-    var n = board.length;
-    var dst = Matrix(n, -1);
-    var used = Matrix(n, false);
-    var parent = Matrix(n, 0);
-    var queue = [];
-    var way = [];
 
-    used[0][0] = true;
-    dst[0][0] = 0;
-    parent[0][0] = -1;
 
     function index(inputArray, searchValue) {
         for (var i = 0, L = inputArray.length; i < L; i++) {
@@ -105,6 +96,16 @@ solutions.lucy = function (board) {
     var s2 = start[1];
     var f1 = finish[0];
     var f2 = finish[1];
+    var n = board.length;
+    var dst = Matrix(n, -1);
+    var used = Matrix(n, false);
+    var parent = Matrix(n, 0);
+    var queue = [];
+    var way = [];
+
+    used[s1][s2] = true;
+    dst[s1][s2] = 0;
+    parent[s1][s2] = -1;
 
 
     queue.push([s1, s2]);
@@ -190,6 +191,6 @@ solutions.lucy = function (board) {
     way.unshift([s1, s2]);
 
     return way;
-}
+};
 
 module.exports = solutions;
