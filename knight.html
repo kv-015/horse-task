@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+<body>
+
+<script>
+
+    function Matrix(size, value) {
+        var arr = new Array(size);
+        for (var i = 0; i < size; i++) {
+            arr[i] = new Array(size);
+            for (var j = 0; j < size; j++) {
+                arr[i][j] = value;
+            }
+        }
+        return arr;
+    }
+    function index(inputArray, searchValue) {
+        for (var i = 0, L = inputArray.length; i < L; i++) {
+            var j = inputArray[i].indexOf(searchValue);
+
+            if (j >= 0) {
+                return [i, j];
+            }
+        }
+        return null;
+    }
+    function notVisited(x, y) {
+        if ((x >= 0) && (x < n) && (y >= 0) && (y < n) && (!used[x][y])) {
+            return true;
+        }
+    }
+    function noWall(x, y) {
+        if (board[x][y] != -1) {
+            return true;
+        }
+    }
+
+    var n = 5;
+    var dst = Matrix(n, -1);
+    var used = Matrix(n, false);
+    var parent = Matrix(n, 0);
+    var queue = [];
+    var way = [];
+    /* var start = index(board, 's');
+     var finish = index(board, 'f');
+     var s1 = start[0];
+     var s2 = start[1];
+     var f1 = finish[0];
+     var f2 = finish[1];*/
+    queue.push([0, 0]);
+    used[0][0] = true;
+    dst[0][0] = 0;
+    parent[0][0] = -1;
+
+    var board = [
+        [0, -1, -1, 0, 0],
+        [0, 0, -1, -1, 0],
+        [0, 0, -1, -1, 0],
+        [0, 0, 0, -1, 0],
+        [0, 0, 0, 0, 0]
+    ];
+
+
+    while (queue.length != 0) {
+        var current = queue.shift();
+        var cx = current[0];
+        var cy = current[1];
+
+        if ((notVisited(cx + 1, cy + 2)) || (noWall(cx + 1, cy + 2))) {
+            queue.push([cx + 1, cy + 2]);
+            used[cx + 1][cy + 2] = true;
+            dst[cx + 1][cy + 2] = dst[cx][cy] + 1;
+            parent[cx + 1][cy + 2] = [cx, cy];
+        }
+
+        if ((notVisited(cx + 1, cy - 2)) || (noWall(cx + 1, cy - 2))) {
+            queue.push([cx + 1, cy - 2]);
+            used[cx + 1][cy - 2] = true;
+            dst[cx + 1][cy - 2] = dst[cx][cy] + 1;
+            parent[cx + 1][cy - 2] = [cx, cy];
+        }
+
+        if ((notVisited(cx - 1, cy + 2)) || (noWall(cx - 1, cy + 2))) {
+            queue.push([cx - 1, cy + 2]);
+            used[cx - 1][cy + 2] = true;
+            dst[cx - 1][cy + 2] = dst[cx][cy] + 1;
+            parent[cx - 1][cy + 2] = [cx, cy];
+        }
+
+        if ((notVisited(cx - 1, cy - 2)) || (noWall(cx - 1, cy - 2))) {
+            queue.push([cx - 1, cy - 2]);
+            used[cx - 1][cy - 2] = true;
+            dst[cx - 1][cy - 2] = dst[cx][cy] + 1;
+            parent[cx - 1][cy - 2] = [cx, cy];
+        }
+
+        if ((notVisited(cx + 2, cy + 1)) || (noWall(cx + 2, cy + 1))) {
+            queue.push([cx + 2, cy + 1]);
+            used[cx + 2][cy + 1] = true;
+            dst[cx + 2][cy + 1] = dst[cx][cy] + 1;
+            parent[cx + 2][cy + 1] = [cx, cy];
+        }
+
+        if ((notVisited(cx + 2, cy - 1)) || (noWall(cx + 2, cy - 1))) {
+            queue.push([cx + 2, cy - 1]);
+            used[cx + 2][cy - 1] = true;
+            dst[cx + 2][cy - 1] = dst[cx][cy] + 1;
+            parent[cx + 2][cy - 1] = [cx, cy];
+        }
+
+        if ((notVisited(cx - 2, cy + 1)) || (noWall(cx - 2, cy + 1))) {
+            queue.push([cx - 2, cy + 1]);
+            used[cx - 2][cy + 1] = true;
+            dst[cx - 2][cy + 1] = dst[cx][cy] + 1;
+            parent[cx - 2][cy + 1] = [cx, cy];
+        }
+
+        if ((notVisited(cx - 2, cy - 1)) || (noWall(cx - 2, cy - 1))) {
+            queue.push([cx - 2, cy - 1]);
+            used[cx - 2][cy - 1] = true;
+            dst[cx - 2][cy - 1] = dst[cx][cy] + 1;
+            parent[cx - 2][cy - 1] = [cx, cy];
+        }
+    }
+
+    if (dst[n - 1][n - 1] != -1) {
+        console.log(dst[n - 1][n - 1]);
+        way.unshift([n - 1, n - 1]);
+        var i = parent[n - 1][n - 1][0];
+        var j = parent[n - 1][n - 1][1];
+        while ((i != 0) && (j != 0)) {
+            way.unshift([i, j]);
+            var i2 = i;
+            i = parent[i][j][0];
+            j = parent[i2][j][1];
+        }
+        way.unshift([0, 0]);
+    } else {
+        console.log('no way')
+    }
+
+
+</script>
+
+</body>
+</html>
