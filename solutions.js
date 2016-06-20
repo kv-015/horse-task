@@ -113,7 +113,6 @@ solutions.olgaRomankiv = function (board) {
         if (board[corner[e].x][corner[e].y] == 'f') {
             finish = corner[e];
         }
-
     }
     return (horseMove(start, finish, board));
 };
