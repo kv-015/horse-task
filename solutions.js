@@ -535,6 +535,9 @@ solutions.volodymyrPantasenko = function (board) {
             return [];
         }
     }
+    
+    point = [pointY, pointX];
+    path.unshift(point);
 
     return path;
 };
