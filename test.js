@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('assert');
 
 var solutions = require('./solutions.js');
@@ -6,7 +8,7 @@ var Nsmall = 50;
 var Nbig = 1000;
 
 var po = function (x, y) {
-    obj = {};
+    var obj = {};
     obj.x = x;
     obj.y = y;
     return obj;
