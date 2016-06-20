@@ -27,127 +27,151 @@ solutions.olhaRomankiv = function (board) {
 };
 
 solutions.ostapKhomitskyi = function (board) {
-
-    let start, finish;
-
-    // find start and finish coordinates
-    for (let i = 0; i < board.length; i++) {
-
-        for (let j = 0; j < board[i].length; j++) {
-            let currentCell = board[i][j];
-            board[i][j] = {
-                value: currentCell,
-                coordinates: [i, j]
-            };
-
-            if (currentCell === 's') {
-                start = board[i][j];
-            }
-            if (currentCell === 'f') {
-                finish = board[i][j];
-            }
-        } // end inner for
-
-    } // end outer for
-
-    // creates a double wall around the board.
-    function bound(board) {
-        let l = board.length,
-            arr = new Array(l),
-            wallObj = {
-                value: -1
-            };
-
-        for (let i = 0; i < arr.length; i++) {
-            arr[i] = wallObj;
-        }
-
-        board[-1] = arr;
-        board[-2] = arr;
-        board.push(arr);
-        board.push(arr);
-
-        for (let i = 0; i < l + 2; i++) {
-            board[i][-1] = wallObj;
-            board[i][-2] = wallObj;
-            board[i][l] = wallObj;
-            board[i][l + 1] = wallObj;
-        }
-
-        return board;
-    }
-
-    // returns array of coordinates of elements of the next frontier
-    function possibleMoves(x, y) {
-        return [
-            [x + 1, y - 2],
-            [x + 2, y - 1],
-            [x + 2, y + 1],
-            [x + 1, y + 2],
-            [x - 1, y + 2],
-            [x - 2, y + 1],
-            [x - 2, y - 1],
-            [x - 1, y - 2]
-        ];
-    }
-
-    // returns array of coordinates
-    function createPath(val) {
-        const path = [];
-        while (val) {
-            path.unshift(val.coordinates);
-            val = val.parent;
-        }
-
-        return path;
-    }
-
-    bound(board);
-
-    start.level = 0;
-    start.parent = undefined;
-
-    let iteration = 1,
-        frontier = [start];
-
-    while (frontier.length) {
-        let nextFrontier = [];
-
-        for (let i = 0; i < frontier.length; i++) {
-            let x = frontier[i].coordinates[0],
-                y = frontier[i].coordinates[1];
-
-            for (let j = 0, cells = possibleMoves(x, y); j < cells.length; j++) {
-                let cell = board[cells[j][0]][cells[j][1]];
-
-                if (cell.value === -1) {
-                    continue;
-                }
-
-                if (!cell.hasOwnProperty('level')) {
-                    cell.level = iteration;
-                    cell.parent = frontier[i];
-
-                    if (cell.value === 'f') {
-
-                        return createPath(cell);
-                    }
-
-                    nextFrontier.push(cell);
-                } // end outer if
-
-            } // end inner for
-
-        } // end outer for
-
-        frontier = nextFrontier;
-        iteration++;
-    } // end while
-    
+    // YOUR SOLUTION GOES HERE
 };
 
 solutions.volodymyrPantasenko = function (board) {
     // YOUR SOLUTION GOES HERE
+};
+
+solutions.lucy = function (board) {
+
+
+    function Matrix(size, value) {
+        var arr = new Array(size);
+        for (var i = 0; i < size; i++) {
+            arr[i] = new Array(size);
+            for (var j = 0; j < size; j++) {
+                arr[i][j] = value;
+            }
+        }
+        return arr;
+    }
+    var n = board.length;
+
+
+    function index(inputArray, searchValue) {
+        for (var i = 0, L = inputArray.length; i < L; i++) {
+            var j = inputArray[i].indexOf(searchValue);
+
+            if (j >= 0) {
+                return [i, j];
+            }
+        }
+        return null;
+    }
+
+    function notVisited(x, y) {
+        if ((x >= 0) && (x < n) && (y >= 0) && (y < n)) {
+            if (!used[x][y]) {
+                /*if (board[x][y]!=-1 ){*/
+                return true;
+            }
+        }
+        return false;
+        /*}return false;*/
+    }
+
+    var start = index(board, 's');
+    var finish = index(board, 'f');
+    var s1 = start[0];
+    var s2 = start[1];
+    var f1 = finish[0];
+    var f2 = finish[1];
+    var dst = Matrix(n, -1);
+    var used = Matrix(n, false);
+    var parent = Matrix(n, 0);
+    var queue = [];
+    var way = [];
+
+    used[s1][s2] = true;
+    dst[s1][s2] = 0;
+    parent[s1][s2] = -1;
+
+
+    queue.push([s1, s2]);
+
+    while (queue.length != 0) {
+        var current = queue.shift();
+        var cx = current[0];
+        var cy = current[1];
+
+        if (notVisited(cx + 1, cy + 2)) {
+            queue.push([cx + 1, cy + 2]);
+            used[cx + 1][cy + 2] = true;
+            dst[cx + 1][cy + 2] = dst[cx][cy] + 1;
+            parent[cx + 1][cy + 2] = [cx, cy];
+
+        }
+
+        if (notVisited(cx + 1, cy - 2)) {
+            queue.push([cx + 1, cy - 2]);
+            used[cx + 1][cy - 2] = true;
+            dst[cx + 1][cy - 2] = dst[cx][cy] + 1;
+            parent[cx + 1][cy - 2] = [cx, cy];
+        }
+
+        if (notVisited(cx - 1, cy + 2)) {
+            queue.push([cx - 1, cy + 2]);
+            used[cx - 1][cy + 2] = true;
+            dst[cx - 1][cy + 2] = dst[cx][cy] + 1;
+            parent[cx - 1][cy + 2] = [cx, cy];
+        }
+
+        if (notVisited(cx - 1, cy - 2)) {
+            queue.push([cx - 1, cy - 2]);
+            used[cx - 1][cy - 2] = true;
+            dst[cx - 1][cy - 2] = dst[cx][cy] + 1;
+            parent[cx - 1][cy - 2] = [cx, cy];
+        }
+
+        if (notVisited(cx + 2, cy + 1)) {
+            queue.push([cx + 2, cy + 1]);
+            used[cx + 2][cy + 1] = true;
+            dst[cx + 2][cy + 1] = dst[cx][cy] + 1;
+            parent[cx + 2][cy + 1] = [cx, cy];
+        }
+
+        if (notVisited(cx + 2, cy - 1)) {
+            queue.push([cx + 2, cy - 1]);
+            used[cx + 2][cy - 1] = true;
+            dst[cx + 2][cy - 1] = dst[cx][cy] + 1;
+            parent[cx + 2][cy - 1] = [cx, cy];
+        }
+
+        if (notVisited(cx - 2, cy + 1)) {
+            queue.push([cx - 2, cy + 1]);
+            used[cx - 2][cy + 1] = true;
+            dst[cx - 2][cy + 1] = dst[cx][cy] + 1;
+            parent[cx - 2][cy + 1] = [cx, cy];
+        }
+
+        if (notVisited(cx - 2, cy - 1)) {
+            queue.push([cx - 2, cy - 1]);
+            used[cx - 2][cy - 1] = true;
+            dst[cx - 2][cy - 1] = dst[cx][cy] + 1;
+            parent[cx - 2][cy - 1] = [cx, cy];
+        }
+    }
+
+    if (dst[f1][f2] != -1) {
+        return true;
+    } else {
+        return false;
+    }
+
+    way.unshift([f1, f2]);
+    var i = parent[f1][f2][0];
+    var j = parent[f1][f2][1];
+    while ((i !== s1) && (j !== s2)) {
+        way.unshift([i, j]);
+        var i2 = i;
+        i = parent[i][j][0];
+        j = parent[i2][j][1];
+    }
+    way.unshift([s1, s2]);
+
+    return way;
 };
 
 solutions.yaroslavSamoilenko = function (board) {
