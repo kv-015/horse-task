@@ -448,7 +448,7 @@ solutions.ostapKhomitskyi = function (board) {
 solutions.volodymyrPantasenko = function (board) {
     // YOUR SOLUTION GOES HERE
     var dimensions = board.length;
-    var startPoint, startPointY, startPointX;  
+    var startPoint, startPointY, startPointX;
     var finishPoint, finishPointY, finishPointX;
 
     // Search for start and finish points
@@ -537,6 +537,9 @@ solutions.volodymyrPantasenko = function (board) {
             return [];
         }
     }
+
+    point = [pointY, pointX];
+    path.unshift(point);
 
     return path;
 };
