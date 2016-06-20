@@ -53,6 +53,7 @@ solutions.olgaRomankiv = function (board) {
         }
     }
 
+    
     function getPossibleSteps(current, fieldA) {
         current = current.getCoord();
         var possibleSteps = [];
