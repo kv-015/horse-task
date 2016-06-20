@@ -10,96 +10,8 @@ solutions.bohdanVolyk = function (board) {
     // YOUR SOLUTION GOES HERE
 };
 
-solutions.katerynaMazurkevych = function (walls) {
-            var SIZE = walls.length;
-          //debugger;
-          var board =[];
-          var open =[];
-          var close=[];
-          var father=[];
-        
-          var start, finish;
-        
-          function ev(s, f)
-          {
-          	return (Math.sqrt((s[0]-f[0])*(s[0]-f[0])+(s[1]-f[1])*(s[1]-f[1])));
-          }
-        
-          function minn(arr)
-          {
-          	var min;
-          	min=0;
-          	for (var i=0; i<arr.length; i++)
-          	{
-               if ( arr[i].f<arr[min].f ) { min=i ;};
-          	}
-          	return min;
-          }
-        
-          for (var i = 0; i < SIZE ; i++) {
-          	board[i]=[];
-          	close[i]=[];
-          	father[i]=[];
-            for (var j = 0; j < SIZE ; j++) {
-        
-            	if (walls[j][i]=='s') {start=[i,j];}
-            	if (walls[j][i]=='f') {finish=[i,j];} 
-            	if ( start&&finish ){ break; }	
-            }
-        
-          };
-          board[start[0]][start[1]]=0;
-          start.g=0;
-          start.h=ev(start, finish);
-          start.f=start.g+start.h;
-        
-          open.push(start);
-        
-          while (open.length && !board[finish[0]][finish[1]]) {
-            
-            var c = minn(open);
-            var curr=open[c];
-        
-            var i = curr[0];
-            var j = curr[1];
-            open.splice(c, 1);
-        
-            close[i][j]=1;
-        
-            var neighbors = [[i - 1, j - 2], [i - 2, j - 1], [i - 2, j + 1], [i - 1, j + 2], [i + 1, j + 2], [i + 2, j + 1], [i + 2, j - 1], [i + 1, j - 2]];
-        
-            for (var k = 0; k < neighbors.length; k++) {
-            
-              var iNr=neighbors[k][0];
-              var jNr=neighbors[k][1];
-              if (  iNr >= 0 && iNr<SIZE && jNr >= 0 && jNr<SIZE && close[iNr][jNr]!==1 &&  walls[jNr][iNr]!==-1 ) {
-        
-              	neighbors[k].g=curr.g+1;
-              	neighbors[k].h=ev(neighbors[k], finish);
-              	neighbors[k].f=neighbors[k].g+neighbors[k].h;
-              	open.push(neighbors[k]);
-              	close[iNr][jNr]=1;
-                board[iNr][jNr] = board[i][j] + 1;
-                father[iNr][jNr] = [i,j];
-              };
-            };
-          };
-         
-          var road=[];
-          function path(fPath)
-        	{
-        	    road.unshift(fPath);
-        		if(fPath)
-        		{   
-        			return path(father[fPath[0]][fPath[1]])
-        		};
-        		return start;
-        	}
-        	  
-        	  path([finish[0] , finish[1]]);
-        	  road.shift();
-           return (path);
-
+solutions.katerynaMazurkevych = function (board) {
+    // YOUR SOLUTION GOES HERE
 };
 
 solutions.liudmylaPolianychko = function (board) {
@@ -115,106 +27,127 @@ solutions.olhaRomankiv = function (board) {
 };
 
 solutions.ostapKhomitskyi = function (board) {
-    // YOUR SOLUTION GOES HERE
+
+    let start, finish;
+
+    // find start and finish coordinates
+    for (let i = 0; i < board.length; i++) {
+
+        for (let j = 0; j < board[i].length; j++) {
+            let currentCell = board[i][j];
+            board[i][j] = {
+                value: currentCell,
+                coordinates: [i, j]
+            };
+
+            if (currentCell === 's') {
+                start = board[i][j];
+            }
+            if (currentCell === 'f') {
+                finish = board[i][j];
+            }
+        } // end inner for
+
+    } // end outer for
+
+    // creates a double wall around the board.
+    function bound(board) {
+        let l = board.length,
+            arr = new Array(l),
+            wallObj = {
+                value: -1
+            };
+
+        for (let i = 0; i < arr.length; i++) {
+            arr[i] = wallObj;
+        }
+
+        board[-1] = arr;
+        board[-2] = arr;
+        board.push(arr);
+        board.push(arr);
+
+        for (let i = 0; i < l + 2; i++) {
+            board[i][-1] = wallObj;
+            board[i][-2] = wallObj;
+            board[i][l] = wallObj;
+            board[i][l + 1] = wallObj;
+        }
+
+        return board;
+    }
+
+    // returns array of coordinates of elements of the next frontier
+    function possibleMoves(x, y) {
+        return [
+            [x + 1, y - 2],
+            [x + 2, y - 1],
+            [x + 2, y + 1],
+            [x + 1, y + 2],
+            [x - 1, y + 2],
+            [x - 2, y + 1],
+            [x - 2, y - 1],
+            [x - 1, y - 2]
+        ];
+    }
+
+    // returns array of coordinates
+    function createPath(val) {
+        const path = [];
+        while (val) {
+            path.unshift(val.coordinates);
+            val = val.parent;
+        }
+
+        return path;
+    }
+
+    bound(board);
+
+    start.level = 0;
+    start.parent = undefined;
+
+    let iteration = 1,
+        frontier = [start];
+
+    while (frontier.length) {
+        let nextFrontier = [];
+
+        for (let i = 0; i < frontier.length; i++) {
+            let x = frontier[i].coordinates[0],
+                y = frontier[i].coordinates[1];
+
+            for (let j = 0, cells = possibleMoves(x, y); j < cells.length; j++) {
+                let cell = board[cells[j][0]][cells[j][1]];
+
+                if (cell.value === -1) {
+                    continue;
+                }
+
+                if (!cell.hasOwnProperty('level')) {
+                    cell.level = iteration;
+                    cell.parent = frontier[i];
+
+                    if (cell.value === 'f') {
+
+                        return createPath(cell);
+                    }
+
+                    nextFrontier.push(cell);
+                } // end outer if
+
+            } // end inner for
+
+        } // end outer for
+
+        frontier = nextFrontier;
+        iteration++;
+    } // end while
+    
 };
 
 solutions.volodymyrPantasenko = function (board) {
     // YOUR SOLUTION GOES HERE
-    var dimensions = board.length;
-    var startPoint, startPointY, startPointX;
-    var finishPoint, finishPointY, finishPointX;
-
-    // Search for start and finish points
-    var i, j;
-    i = j = dimensions;
-    while (i--) {
-        while (j--) {
-            if (board[i][j] == 's') {
-                startPointY = i;
-                startPointX = j;
-                startPoint = [startPointY, startPointX];
-            } else if (board[i][j] == 'f') {
-                finishPointY = i;
-                finishPointX = j;
-                finishPoint = [finishPointY, finishPointX];
-            }
-        }
-        j = dimensions;
-    }
-
-    // Prepare an array for passed points
-    var passedPoints = new Array(dimensions);
-    for (i = 0; i < dimensions; i++) {
-        passedPoints[i] = new Array(dimensions);
-    }
-
-    // Horse figure's possible moves ([y, x] coordinates)
-    var possibleMoves = [[-2, 1], [-1, 2], [1, 2], [2, 1], [2, -1], [1, -2], [-1, -2], [-2, -1]];
-
-    // Search for possible moves on the chessboard
-    var queue = [];
-    var currentPoint = startPoint;
-    queue.push(currentPoint);
-
-    while (queue.length > 0) {
-        currentPoint = queue.shift();
-
-        var currentPointY = currentPoint[0];
-        var currentPointX = currentPoint[1];
-
-        if (board[currentPointY][currentPointX] != 's'
-            && board[currentPointY][currentPointX] != 'f'
-            && board[currentPointY][currentPointX] != 0) {
-            continue;
-        } else if (currentPointY == finishPointY && currentPointX == finishPointX) {
-            break;
-        }
-
-        board[currentPointY][currentPointX] = (-1).toString();
-
-        for (var move of possibleMoves) {
-            var nextPointY = currentPointY + move[0];
-            var nextPointX = currentPointX + move[1];
-            var nextPoint = [nextPointY, nextPointX];
-            if ((nextPointY >= 0 && nextPointY < dimensions) && (nextPointX >= 0 && nextPointX < dimensions)
-                && (board[nextPointY][nextPointX] == 0 || board[nextPointY][nextPointX] == 'f')) {
-                if (board[nextPointY][nextPointX] == 'f') {
-                    queue.unshift(nextPoint);
-                } else {
-                    queue.push(nextPoint);
-                }
-                passedPoints[nextPointY][nextPointX] = currentPoint;
-            }
-        }
-    }
-
-    // Find the shortest path
-    var path = [];
-
-    var pointY = finishPointY;
-    var pointX = finishPointX;
-
-    while (pointY != startPointY && pointX != startPointX) {
-        var point = [pointY, pointX];
-        var prevPoint = passedPoints[pointY][pointX];
-
-        if (prevPoint) {
-            var prevPointY = prevPoint[0];
-            var prevPointX = prevPoint[1];
-
-            path.unshift(point);
-
-            pointY = prevPointY;
-            pointX = prevPointX;
-        } else {
-            return [];
-        }
-    }
-
-    point = [pointY, pointX];
-    path.unshift(point);
-
-    return path;
 };
 
 solutions.yaroslavSamoilenko = function (board) {
